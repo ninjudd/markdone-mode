@@ -114,17 +114,11 @@
 (define-minor-mode markdone-mode "Minor mode for todos in Markdown."
   :group 'markdone :lighter markdone-mode-text :keymap 'markdone-mode-map
   (if markdone-mode
-      (progn ;; Save these variables so we can restore them in markdone-turn-off.
-        (set (make-local-variable 'markdone-font-lock-mode)
-             font-lock-mode)
-        (set (make-local-variable 'markdone-font-lock-keywords)
-             (copy-sequence font-lock-keywords))        
-        (font-lock-mode 0) ;; turn off so we can refontify
-        (font-lock-add-keywords nil markdone-mode-font-lock-keywords t)
-        (font-lock-mode 1))
-    (progn ;; restore original state
-      (font-lock-mode 0) ;; turn off so we can refontify
-      (setq font-lock-keywords markdone-font-lock-keywords)
-      (font-lock-mode markdone-font-lock-mode))))
+      (font-lock-add-keywords nil markdone-mode-font-lock-keywords t)
+    (font-lock-remove-keywords nil markdone-mode-font-lock-keywords))
+  ;; refontify
+  (when font-lock-mode
+    (font-lock-mode 0)
+    (font-lock-mode 1)))
 
 (provide 'markdone-mode)
